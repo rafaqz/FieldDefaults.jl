@@ -3,24 +3,33 @@ __precompile__()
 module Defaults
 
 using MetaFields
-
-export @default, @kw_default, default, kw_default
-
+export @default, @default_kw, @redefault_kw, default, default_kw
 @metafield default nothing
 
-macro kw_default(ex)
-    typ = MetaFields.firsthead(ex, :type) do typ_ex
-        return MetaFields.namify(typ_ex.args[2])
-    end |> esc
-
+macro default_kw(ex) 
+    typ = get_type(ex)
     quote 
         import Defaults.default
         @default $(esc(ex))
-        $typ(;kwargs...) = kw_default($typ; kwargs...)
+        $typ(;kwargs...) = default_kw($typ; kwargs...)
     end
 end
 
-kw_default(::Type{T}; kwargs...) where T = begin
+macro redefault_kw(ex) 
+    typ = get_type(ex)
+    quote 
+        import Defaults.default
+        @redefault $(esc(ex))
+        $typ(;kwargs...) = default_kw($typ; kwargs...)
+    end
+end
+
+get_type(ex) = 
+    MetaFields.firsthead(ex, :type) do typ_ex
+        return MetaFields.namify(typ_ex.args[2])
+    end |> esc
+
+default_kw(::Type{T}; kwargs...) where T = begin
     dict = Dict()
     fnames = fieldnames(T)
     for fname in fnames
