@@ -2,9 +2,10 @@ __precompile__()
 
 module Defaults
 
-using MetaFields
-export @default, @default_kw, @redefault_kw, default, default_kw
-@metafield default nothing
+using MetaFields, Setfield
+using MetaFields: @default, default
+
+export @default_kw, @redefault_kw, default_kw
 
 macro default_kw(ex) 
     typ = get_type(ex)
@@ -15,14 +16,14 @@ macro default_kw(ex)
     end
 end
 
-macro redefault_kw(ex) 
-    typ = get_type(ex)
-    quote 
-        import Defaults.default
-        @redefault $(esc(ex))
-        $typ(;kwargs...) = default_kw($typ; kwargs...)
-    end
-end
+# macro redefault_kw(ex) 
+#     typ = get_type(ex)
+#     quote 
+#         import Defaults.default
+#         @redefault $(esc(ex))
+#         $typ(;kwargs...) = default_kw($typ; kwargs...)
+#     end
+# end
 
 get_type(ex) = 
     MetaFields.firsthead(ex, :type) do typ_ex
@@ -30,20 +31,19 @@ get_type(ex) =
     end |> esc
 
 default_kw(::Type{T}; kwargs...) where T = begin
-    dict = Dict()
     fnames = fieldnames(T)
-    for fname in fnames
-       dict[fname] = get_default(T, Val{fname})
-    end
+    defaults = get_default(T)
 
     for (key, val) in kwargs
         key in fnames || error("$key is not a field of $T")
-        dict[key] = val
+        ind = findfirst(n -> n == key, fnames)
+        defaults = @set defaults[ind] = val
     end
 
-    T(getindex.(dict, fnames)...)
+    T(defaults...)
 end
 
-get_default(T::Type, F::Type) = default(T, F) 
+
+get_default(T::Type) = default(T) 
 
 end # module
