@@ -1,34 +1,32 @@
-__precompile__()
-
 module Defaults
 
-using MetaFields, Setfield
-using MetaFields: @default, default
+using Tags
+using Tags: @default, @redefault, default
 
-export @default_kw, @redefault_kw, default_kw
+export @default_kw, default_kw
 
-macro default_kw(ex) 
+macro default_kw(ex)
     typ = get_type(ex)
-    quote 
+    quote
         import Defaults.default
-        @default $(esc(ex))
-        $typ(;kwargs...) = default_kw($typ; kwargs...)
+        $(Tags.add_field_funcs(ex, :default))
+        $(esc(typ))(;kwargs...) = default_kw($(esc(typ)); kwargs...)
     end
 end
 
-# macro redefault_kw(ex) 
-#     typ = get_type(ex)
-#     quote 
-#         import Defaults.default
-#         @redefault $(esc(ex))
-#         $typ(;kwargs...) = default_kw($typ; kwargs...)
-#     end
-# end
+macro redefault_kw(ex)
+    typ = get_type(ex)
+    quote
+        import Defaults.default
+        $(Tags.add_field_funcs(ex, :default; update=true))
+        $(esc(typ))(;kwargs...) = default_kw($(esc(typ)); kwargs...)
+    end
+end
 
-get_type(ex) = 
-    MetaFields.firsthead(ex, :type) do typ_ex
-        return MetaFields.namify(typ_ex.args[2])
-    end |> esc
+get_type(ex) =
+    Tags.firsthead(ex, :struct) do typ_ex
+        return Tags.namify(typ_ex.args[2])
+    end
 
 default_kw(::Type{T}; kwargs...) where T = begin
     fnames = fieldnames(T)
@@ -37,13 +35,12 @@ default_kw(::Type{T}; kwargs...) where T = begin
     for (key, val) in kwargs
         key in fnames || error("$key is not a field of $T")
         ind = findfirst(n -> n == key, fnames)
-        defaults = @set defaults[ind] = val
+        defaults = (defaults[1:ind-1]..., val, defaults[ind+1:end]...)
     end
 
     T(defaults...)
 end
 
-
-get_default(T::Type) = default(T) 
+get_default(args...) = default(args...)
 
 end # module

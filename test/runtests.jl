@@ -1,11 +1,5 @@
-using Defaults
+using Defaults, Test
 using Defaults: get_default
-
-@static if VERSION < v"0.7.0-DEV.2005"
-    using Base.Test
-else
-    using Test
-end
 
 @default_kw struct TestStruct
     foo::Int    | 1
@@ -23,7 +17,7 @@ t = TestStruct(foo = 2, bar=:foo)
 @test t.foo == 2
 @test t.bar == :foo
 
-@redefault_kw struct TestStruct
+@default_kw struct TestStruct
     foo::Int    | 3
     bar::Symbol | :foobar
 end
