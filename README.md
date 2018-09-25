@@ -4,7 +4,7 @@
 [![Coverage Status](https://coveralls.io/repos/rafaqz/Defaults.jl/badge.svg?branch=master&service=github)](https://coveralls.io/github/rafaqz/Defaults.jl?branch=master)
 [![codecov.io](http://codecov.io/github/rafaqz/Defaults.jl/coverage.svg?branch=master)](http://codecov.io/github/rafaqz/Defaults.jl?branch=master)
 
-A lightweight package that adds keyword defaults to (the also lightweight!) [Tags.jl](https://github.com/rafaqz/Tags.jl).
+A lightweight package that adds keyword defaults to (the also lightweight!) [FieldMetadata.jl](https://github.com/rafaqz/FieldMetadata.jl).
 
 The macro adds a keyword arg constructor to a type:
 
@@ -26,7 +26,7 @@ It has a similar outcome (though entirely difference mechanism) to Parameters.jl
 
 But it has some other nice features. 
 
-Defaults can be added to a struct that has already been defined by prefixing `re` to the macro name, as in Tags.jl:
+Defaults can be added to a struct that has already been defined by prefixing `re` to the macro name, as in FieldMetadata.jl:
 
 ```julia
 stuct SomeoneElseDefined
@@ -49,4 +49,4 @@ The process of creating defaults can be also overriden by writing methods of
 `get_default()`, to change defauls for all fields at once, to say, swap out all
 defaults for a second default field, or optionally add units from a @units
 tag. Extra kags are easy to add to a struct at definition time or
-afterwards, using a [@tag](https://github.com/rafaqz/Tags.jl) macro.
+afterwards, using a [@metadata](https://github.com/rafaqz/FieldMetadata.jl) macro.
