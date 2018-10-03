@@ -9,7 +9,7 @@ A lightweight package that adds keyword defaults to (the also lightweight!) [Fie
 The macro adds a keyword arg constructor to a type:
 
 ```julia
-@default_kw stuct MyStruct
+@default_kw struct MyStruct
     foo::Int | 1
     bar::Int | 2
 end
