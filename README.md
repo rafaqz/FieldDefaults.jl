@@ -22,7 +22,7 @@ julia> m.bar
 2
 ```
 
-It has a similar outcome (though entirely difference mechanism) to Parameters.jl. It has some limitations: presently it only adds an Outside constructor, and defaults can't use the other default values.
+It has a similar outcome (though entirely difference mechanism) to Parameters.jl. It has some limitations: presently it only adds an outside constructor, and defaults can't use the other default values.
 
 But it has some other nice features. 
 
@@ -47,6 +47,10 @@ default(::YouType, ::Type{Val{:fieldname}}) = :foo
 
 The process of creating defaults can be also overriden by writing methods of
 `get_default()`, to change defauls for all fields at once, to say, swap out all
-defaults for a second default field, or optionally add units from a @units
-tag. Extra kags are easy to add to a struct at definition time or
+defaults for a second default field, or optionally add units from @units
+metadata. 
+
+Extra metadata fields are easy to add to a struct at definition time or
 afterwards, using a [@metadata](https://github.com/rafaqz/FieldMetadata.jl) macro.
+
+Default values of single structs or more complex composite types can be flattened to tuples or vectors using [Flatten.jl](https://github.com/rafaqz/Flatten.jl). This can be combined with fieldnames, other metadata and current field values for generating tabular displays, or other uses.
