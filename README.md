@@ -29,7 +29,7 @@ But it has some other nice features.
 Defaults can be added to a struct that has already been defined by prefixing `re` to the macro name, as in FieldMetadata.jl:
 
 ```julia
-stuct SomeoneElseDefined
+struct SomeoneElseDefined
     foo::Int
     bar::Int
 end
