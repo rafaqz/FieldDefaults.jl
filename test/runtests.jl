@@ -1,5 +1,5 @@
-using Defaults, Test
-using Defaults: get_default
+using FieldDefaults, Test
+using FieldDefaults: get_default
 
 @default_kw struct TestStruct
     foo::Int    | 1
