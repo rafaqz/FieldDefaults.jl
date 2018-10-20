@@ -1,8 +1,8 @@
-# Defaults
+# FieldDefaults
 
-[![Build Status](https://travis-ci.org/rafaqz/Defaults.jl.svg?branch=master)](https://travis-ci.org/rafaqz/Defaults.jl)
-[![Coverage Status](https://coveralls.io/repos/rafaqz/Defaults.jl/badge.svg?branch=master&service=github)](https://coveralls.io/github/rafaqz/Defaults.jl?branch=master)
-[![codecov.io](http://codecov.io/github/rafaqz/Defaults.jl/coverage.svg?branch=master)](http://codecov.io/github/rafaqz/Defaults.jl?branch=master)
+[![Build Status](https://travis-ci.org/rafaqz/FieldDefaults.jl.svg?branch=master)](https://travis-ci.org/rafaqz/FieldDefaults.jl)
+[![Coverage Status](https://coveralls.io/repos/rafaqz/FieldDefaults.jl/badge.svg?branch=master&service=github)](https://coveralls.io/github/rafaqz/FieldDefaults.jl?branch=master)
+[![codecov.io](http://codecov.io/github/rafaqz/FieldDefaults.jl/coverage.svg?branch=master)](http://codecov.io/github/rafaqz/FieldDefaults.jl?branch=master)
 
 A lightweight package that adds keyword defaults to (the also lightweight!) [FieldMetadata.jl](https://github.com/rafaqz/FieldMetadata.jl).
 

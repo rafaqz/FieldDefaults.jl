@@ -1,4 +1,4 @@
-module Defaults
+module FieldDefaults
 
 using FieldMetadata
 using FieldMetadata: @default, @redefault, default
@@ -8,7 +8,7 @@ export @default_kw, default_kw
 macro default_kw(ex)
     typ = get_type(ex)
     quote
-        import Defaults.default
+        import FieldDefaults.default
         $(FieldMetadata.add_field_funcs(ex, :default))
         $(esc(typ))(;kwargs...) = default_kw($(esc(typ)); kwargs...)
     end
@@ -17,7 +17,7 @@ end
 macro redefault_kw(ex)
     typ = get_type(ex)
     quote
-        import Defaults.default
+        import FieldDefaults.default
         $(FieldMetadata.add_field_funcs(ex, :default; update=true))
         $(esc(typ))(;kwargs...) = default_kw($(esc(typ)); kwargs...)
     end
