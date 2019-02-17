@@ -29,9 +29,9 @@ git:
 script:
   - julia -e 'using Pkg; Pkg.add(PackageSpec(url="https://github.com/rafaqz/FieldMetadata.jl.git")); Pkg.build("FieldMetadata")'
   - julia -e 'using Pkg; Pkg.add(PackageSpec(url="https://github.com/rafaqz/Nested.jl.git")); Pkg.build("Nested")'
-  - julia -e 'using Pkg; Pkg.add(PackageSpec(url=pwd())); Pkg.build("Defaults"); Pkg.test("Defaults"; coverage=true)'
+  - julia -e 'using Pkg; Pkg.add(PackageSpec(url=pwd())); Pkg.build("FieldDefaults"); Pkg.test("FieldDefaults"; coverage=true)'
 after_success:
   # push coverage results to Coveralls
-  - julia -e 'cd(Pkg.dir("Defaults")); Pkg.add("Coverage"); using Coverage; Coveralls.submit(Coveralls.process_folder())'
+  - julia -e 'cd(Pkg.dir("FieldDefaults")); Pkg.add("Coverage"); using Coverage; Coveralls.submit(Coveralls.process_folder())'
   # push coverage results to Codecov
-  - julia -e 'cd(Pkg.dir("Defaults")); Pkg.add("Coverage"); using Coverage; Codecov.submit(Codecov.process_folder())'
+  - julia -e 'cd(Pkg.dir("FieldDefaults")); Pkg.add("Coverage"); using Coverage; Codecov.submit(Codecov.process_folder())'
