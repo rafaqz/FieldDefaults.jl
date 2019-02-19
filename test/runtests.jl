@@ -1,4 +1,4 @@
-using Revise, FieldDefaults, FieldMetadata, Unitful, Test
+using FieldDefaults, FieldMetadata, Unitful, Test
 using FieldDefaults: get_default
 import FieldMetadata: @units, units
 
