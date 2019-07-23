@@ -33,6 +33,7 @@ default_kw_macro(ex, func, update) = begin
     end
 end
 
+insert_kwargs(kwargs, T) = insert_kwargs(kwargs, get_default(T), T)
 insert_kwargs(kwargs, defaults, T) = insert_kwargs(keys(kwargs.data), Tuple(kwargs.data), defaults, T)
 insert_kwargs(keys::Tuple, vals, defaults, T) = begin
     fnames = fieldnames(T)
@@ -45,7 +46,7 @@ end
 insert_kwargs(keys::Tuple{}, vals, defaults, T) = defaults
 
 default_kw(::Type{T}; kwargs...) where T =
-    T(insert_kwargs(kwargs, get_default(T), T)...)
+    T(insert_kwargs(kwargs, T)...)
 
 # Combined default() and units()
 udefault_kw(::Type{T}; kwargs...) where T =
