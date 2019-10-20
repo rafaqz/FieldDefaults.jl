@@ -60,3 +60,13 @@ u = UTest2(a=2.0, b=3.0, c=3.0u"g*mol^-1")
 @test u.b === 3.0
 @test u.c === 3.0u"g*mol^-1"
 @test u.d === 25.0u"g*mol^-1"
+
+# Running an arbitrary method works, 
+# but they only run when there is no passed-in value
+@default_kw struct ErrorStruct
+    a | :foo
+    b | error("must define field b")
+end
+
+@test_throws ErrorException ErrorStruct(a=:bar)
+@test ErrorStruct(b=:bar).b == :bar
