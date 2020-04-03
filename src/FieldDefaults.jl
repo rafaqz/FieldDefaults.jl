@@ -14,8 +14,8 @@ macro redefault_kw(ex)
     default_kw_macro(ex, :default_kw, true)
 end
 
-macro udefault_kw(ex) 
-    default_kw_macro(ex, :udefault_kw, false) 
+macro udefault_kw(ex)
+    default_kw_macro(ex, :udefault_kw, false)
 end
 
 macro reudefault_kw(ex)
@@ -33,28 +33,22 @@ default_kw_macro(ex, func, update) = begin
     end
 end
 
-insert_kwargs(kwargs, T) = insert_kwargs(kwargs, get_default(T), T)
-insert_kwargs(kwargs, defaults, T) = insert_kwargs(keys(kwargs.data), Tuple(kwargs.data), defaults, T)
-insert_kwargs(keys::Tuple, vals, defaults, T) = begin
-    fnames = fieldnames(T)
-    key, val = keys[1], vals[1]
-    key in fnames || error("$key is not a field of $T")
-    ind = findfirst(n -> n == key, fnames)
-    @set! defaults[ind] = val
-    insert_kwargs(tail(keys), tail(vals), defaults, T)
+insert_kwargs(kwargs, T::Type) = insert_kwargs(fn -> get_default(T, fn), kwargs, T)
+insert_kwargs(defaultfunc, kwargs, T::Type) =
+    insert_kwargs(defaultfunc, Tuple(fieldnames(T)), keys(kwargs.data), Tuple(kwargs.data))
+insert_kwargs(defaultfunc, fieldnames::Tuple, keys, vals) = begin
+    fn = fieldnames[1]
+    ind = findfirst(n -> n == fn, keys)
+    def = ind == nothing ? defaultfunc(fn) : vals[ind]
+    (def, insert_kwargs(defaultfunc, tail(fieldnames), keys, vals)...)
 end
-insert_kwargs(keys::Tuple{}, vals, defaults, T) = defaults
+insert_kwargs(defaultfunc, fieldnames::Tuple{}, keys, vals) = ()
 
-default_kw(::Type{T}; kwargs...) where T =
-    T(insert_kwargs(kwargs, T)...)
+default_kw(::Type{T}; kwargs...) where T = T(insert_kwargs(kwargs, T)...)
 
 # Combined default() and units()
 udefault_kw(::Type{T}; kwargs...) where T =
-    T(insert_kwargs(kwargs, apply_units(get_default(T), units(T)), T)...)
-
-apply_units(defs::Tuple, units::Tuple) = (defs[1] * units[1], apply_units(tail(defs), tail(units))...)
-apply_units(defs::Tuple, units::Tuple{Number,Vararg}) = (defs[1], apply_units(tail(defs), tail(units))...)
-apply_units(defs::Tuple{}, units::Tuple{}) = ()
+    T(insert_kwargs(fn -> get_default(T, fn) * units(T, fn), kwargs, T)...)
 
 get_default(args...) = default(args...)
 
