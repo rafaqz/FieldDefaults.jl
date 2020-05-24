@@ -23,7 +23,7 @@ t = TestStruct(a = 2, b = 3.0, c = 4.0f0)
 @test t.c === 4.0f0
 
 
-@redefault_kw struct TestStruct
+@default_kw TestStruct begin
     a | 3
     b | :foobar
 end
@@ -33,7 +33,7 @@ t = TestStruct()
 @test t.b == :foobar
 @test t.c == :bar
 
-@units @udefault_kw struct UnitfulTestStruct{A,B,C}
+@udefault_kw @units struct UnitfulTestStruct{A,B,C}
     a::A  | 1     | _
     b::B  | 2.0   | u"s"
     c::C  | 3.0f0 | u"g"
@@ -45,7 +45,7 @@ u = UnitfulTestStruct()
 @test u.b === 2.0u"s"
 @test u.c === 3.0f0u"g"
 
-@units @udefault_kw struct UTest2{A,B}
+@udefault_kw @units struct UTest2{A,B}
     a::A | 0.03  | _       
     b::A | 0.025 | _       
     c::B | 25.0  | u"g*mol^-1"

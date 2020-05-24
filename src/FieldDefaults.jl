@@ -1,34 +1,42 @@
 module FieldDefaults
 
 using FieldMetadata, Setfield
-using FieldMetadata: @default, @redefault, default, units
+using FieldMetadata: @default, default, units
 using Base: tail
 
-export @default_kw, @udefault_kw, @redefault_kw, @reudefault_kw, default_kw, udefault_kw
+export @default_kw, @udefault_kw, default_kw, udefault_kw
 
 macro default_kw(ex)
-    default_kw_macro(ex, :default_kw, false)
+    default_kw_unknown(ex, :default_kw, false)
 end
 
-macro redefault_kw(ex)
-    default_kw_macro(ex, :default_kw, true)
+macro default_kw(typ, ex)
+    default_kw_block(typ, ex, :default_kw)
 end
 
 macro udefault_kw(ex)
-    default_kw_macro(ex, :udefault_kw, false)
+    default_kw_unknown(ex, :udefault_kw, false)
 end
 
-macro reudefault_kw(ex)
-    default_kw_macro(ex, :udefault_kw, true)
+macro udefault_kw(typ, ex)
+    default_kw_block(typ, ex, :udefault_kw)
 end
 
-default_kw_macro(ex, func, update) = begin
+default_kw_block(typ, ex, func) = begin
+    quote
+        import FieldDefaults.default
+        $(FieldMetadata.funcs_from_block(typ, ex, :default))
+        $(esc(typ))(;kwargs...) = $func($(esc(typ)); kwargs...)
+    end
+end
+
+default_kw_unknown(ex, func, update) = begin
     typ = FieldMetadata.firsthead(ex, :struct) do typ_ex
         FieldMetadata.namify(typ_ex.args[2])
     end
     quote
         import FieldDefaults.default
-        $(FieldMetadata.add_field_funcs(ex, :default; update=update))
+        $(FieldMetadata.funcs_from_unknown(ex, :default; update=update))
         $(esc(typ))(;kwargs...) = $func($(esc(typ)); kwargs...)
     end
 end
