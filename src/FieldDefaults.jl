@@ -25,7 +25,7 @@ end
 default_kw_block(typ, ex, func) = begin
     quote
         import FieldDefaults.default
-        $(FieldMetadata.funcs_from_block(typ, ex, :default))
+        $(FieldMetadata.funcs_from_block(typ, ex, :default, Any))
         $(esc(typ))(;kwargs...) = $func($(esc(typ)); kwargs...)
     end
 end
@@ -36,7 +36,7 @@ default_kw_unknown(ex, func, update) = begin
     end
     quote
         import FieldDefaults.default
-        $(FieldMetadata.funcs_from_unknown(ex, :default; update=update))
+        $(FieldMetadata.funcs_from_unknown(ex, :default, Any; update=update))
         $(esc(typ))(;kwargs...) = $func($(esc(typ)); kwargs...)
     end
 end
@@ -56,8 +56,13 @@ default_kw(::Type{T}; kwargs...) where T = T(insert_kwargs(kwargs, T)...)
 
 # Combined default() and units()
 udefault_kw(::Type{T}; kwargs...) where T =
-    T(insert_kwargs(fn -> get_default(T, fn) * units(T, fn), kwargs, T)...)
+    T(insert_kwargs(fn -> maybeaddunits(get_default(T, fn), units(T, fn)), kwargs, T)...)
 
+# Add units to Real, otherwise return as-is
+maybeaddunits(def::Union{Real,AbstractArray}, units) = def * units
+maybeaddunits(def, units) = def
+
+# Somewhere to add custom methods to modify `default`
 get_default(args...) = default(args...)
 
 end # module

@@ -1,7 +1,7 @@
 name = "FieldDefaults"
 uuid = "49426c49-986f-5969-8844-d5cc96441cfc"
 authors = ["Rafael Schouten <rafaelschouten@gmail.com>"]
-version = "0.3.0"
+version = "0.3.1"
 
 [deps]
 FieldMetadata = "bf96fef3-21d2-5d20-8afa-0e7d4c32a885"
@@ -9,7 +9,7 @@ Setfield = "efcf1570-3423-57d1-acb7-fd33fddbac46"
 
 [compat]
 julia = "1"
-FieldMetadata = "0.2"
+FieldMetadata = "0.3"
 Setfield = "0.6, 0.7"
 
 [extras]
